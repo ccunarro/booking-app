@@ -14,7 +14,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, UUID> 
     @Query( " SELECT count(r) = 0 FROM Reservation r " +
             " WHERE r.propertyId = :propertyId " +
             " AND (:start >= r.start AND :start < r.end " +
-            "      OR (:end > r.start AND :end <= r.end))")
+            "      OR (:end > r.start AND :end <= r.end)" +
+            "      OR :start <= r.start AND :end >= r.end)")
     boolean isAvailableOnDates(UUID propertyId, LocalDate start, LocalDate end);
 
     @Query(" SELECT count(r) = 1 FROM Reservation r " +
