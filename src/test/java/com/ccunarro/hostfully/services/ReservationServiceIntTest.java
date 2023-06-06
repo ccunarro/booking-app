@@ -35,18 +35,93 @@ class ReservationServiceIntTest {
         Assertions.assertTrue(reservationService.findById(result.getId()) != null);
     }
 
+
+
+    /** CASE ONE
+     *          EXISTING
+     *         NEW
+     */
     @Test
-    public void createReservationsWithOverlapping(){
+    public void createReservationsWithOverlappingCaseOne(){
+        System.out.println("Given an attempt to create a second reservation that overlaps " +
+                "with a previous one, it should fail and throw DateRangeNotAvailableException");
+        UUID userId = UUID.fromString(BookingTestUtils.USER_ID_FOO);
+        LocalDate start = LocalDate.now().plusDays(80);
+        LocalDate end = LocalDate.now().plusDays(83);
+        final CreateReservationForm form = BookingTestUtils.buildReservationFormWithDates(start, end);
+        reservationService.createReservation(userId, form, Reservation.Type.BOOKING);
+
+        start = LocalDate.now().plusDays(79);
+        end = LocalDate.now().plusDays(81);
+        final CreateReservationForm otherForm = BookingTestUtils.buildReservationFormWithDates(start, end);
+
+        assertThrowsExactly(DateRangeNotAvailableException.class, () -> {
+            reservationService.createReservation(userId, otherForm, Reservation.Type.BOOKING);
+        });
+    }
+
+    /** CASE TWO
+     *          EXISTING
+     *           NEW
+     */
+    @Test
+    public void createReservationsWithOverlappingCaseTwo(){
+        System.out.println("Given an attempt to create a second reservation that overlaps " +
+                "with a previous one, it should fail and throw DateRangeNotAvailableException");
+        UUID userId = UUID.fromString(BookingTestUtils.USER_ID_FOO);
+        LocalDate start = LocalDate.now().plusDays(90);
+        LocalDate end = LocalDate.now().plusDays(93);
+        final CreateReservationForm form = BookingTestUtils.buildReservationFormWithDates(start, end);
+        reservationService.createReservation(userId, form, Reservation.Type.BOOKING);
+
+        start = LocalDate.now().plusDays(91);
+        end = LocalDate.now().plusDays(92);
+        final CreateReservationForm otherForm = BookingTestUtils.buildReservationFormWithDates(start, end);
+
+        assertThrowsExactly(DateRangeNotAvailableException.class, () -> {
+            reservationService.createReservation(userId, otherForm, Reservation.Type.BOOKING);
+        });
+    }
+
+    /** CASE THREE
+     *          EXISTING
+     *                 NEW
+     */
+    @Test
+    public void createReservationsWithOverlappingCaseThree(){
         System.out.println("Given an attempt to create a second reservation that overlaps " +
                 "with a previous one, it should fail and throw DateRangeNotAvailableException");
         UUID userId = UUID.fromString(BookingTestUtils.USER_ID_FOO);
         LocalDate start = LocalDate.now().plusDays(70);
-        LocalDate end = LocalDate.now().plusDays(73);
+        LocalDate end = LocalDate.now().plusDays(75);
         final CreateReservationForm form = BookingTestUtils.buildReservationFormWithDates(start, end);
         reservationService.createReservation(userId, form, Reservation.Type.BOOKING);
 
-        start = LocalDate.now().plusDays(72);
+        start = LocalDate.now().plusDays(73);
         end = LocalDate.now().plusDays(76);
+        final CreateReservationForm otherForm = BookingTestUtils.buildReservationFormWithDates(start, end);
+
+        assertThrowsExactly(DateRangeNotAvailableException.class, () -> {
+            reservationService.createReservation(userId, otherForm, Reservation.Type.BOOKING);
+        });
+    }
+
+    /** CASE FOUR
+     *          EXISTING
+     *        NEEEEEEEEEEEW
+     */
+    @Test
+    public void createReservationsWithOverlappingCaseFour(){
+        System.out.println("Given an attempt to create a second reservation that overlaps " +
+                "with a previous one, it should fail and throw DateRangeNotAvailableException");
+        UUID userId = UUID.fromString(BookingTestUtils.USER_ID_FOO);
+        LocalDate start = LocalDate.now().plusDays(100);
+        LocalDate end = LocalDate.now().plusDays(102);
+        final CreateReservationForm form = BookingTestUtils.buildReservationFormWithDates(start, end);
+        reservationService.createReservation(userId, form, Reservation.Type.BOOKING);
+
+        start = LocalDate.now().plusDays(99);
+        end = LocalDate.now().plusDays(104);
         final CreateReservationForm otherForm = BookingTestUtils.buildReservationFormWithDates(start, end);
 
         assertThrowsExactly(DateRangeNotAvailableException.class, () -> {
