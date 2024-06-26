@@ -90,10 +90,12 @@ public class ReservationService {
      * @return
      */
     public ReservationDto createReservation(UUID userId, CreateReservationForm form, Reservation.Type type) {
-        if (LOCKS.containsKey(form.getPropertyId())) {
-            throw new ConcurrentBookingException();
+        synchronized (form.getPropertyId()) {
+            if (LOCKS.containsKey(form.getPropertyId())) {
+                throw new ConcurrentBookingException();
+            }
+            LOCKS.put(form.getPropertyId(), true);
         }
-        LOCKS.put(form.getPropertyId(), true);
         try {
             return executeCreateReservation(userId, form, type);
         } finally {
